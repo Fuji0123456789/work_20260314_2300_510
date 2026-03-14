@@ -1,0 +1,7 @@
+tomcatDir=C:/Users/user/Documents/tec/lang/proc/Java/Eclipse/pleiades-2023-03-java-win-64bit-jre_20230326/tomcat/9
+eclipse.preferences.version=1
+fixTomcatHomeBug=fixed
+contextsDir=C:/Users/user/Documents/tec/lang/proc/Java/Eclipse/pleiades-2023-03-java-win-64bit-jre_20230326/tomcat/9/conf/Catalina/localhost
+tomcatVersion=tomcatV9
+computeSourcePath=true
+tomcatConfigFile=C:/Users/user/Documents/tec/lang/proc/Java/Eclipse/pleiades-2023-03-java-win-64bit-jre_20230326/tomcat/9/conf/server.xml
