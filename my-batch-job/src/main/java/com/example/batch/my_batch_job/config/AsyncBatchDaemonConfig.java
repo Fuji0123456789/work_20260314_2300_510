@@ -1,5 +1,10 @@
 package com.example.batch.my_batch_job.config;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.session.ExecutorType;
@@ -8,7 +13,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.configuration.support.*;
+import org.springframework.batch.core.configuration.support.ApplicationContextFactory;
+import org.springframework.batch.core.configuration.support.AutomaticJobRegistrar;
+import org.springframework.batch.core.configuration.support.DefaultJobLoader;
 import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +33,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.terasoluna.batch.async.db.JobRequestPollTask;
 import org.terasoluna.batch.async.db.repository.BatchJobRequestRepository;
-import com.example.batch.my_batch_job.config.helper.ApplicationContextFactoryHelper;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.Properties;
+import com.example.batch.my_batch_job.config.helper.ApplicationContextFactoryHelper;
 
 @Configuration
 @Import(LaunchContextConfig.class)
@@ -119,7 +123,7 @@ public class AsyncBatchDaemonConfig {
         automaticJobRegistrar.setApplicationContextFactories(
                 applicationContextFactories);
         automaticJobRegistrar.setJobLoader(defaultJobLoader);
-        automaticJobRegistrar.afterPropertiesSet();
+        //automaticJobRegistrar.afterPropertiesSet();
         return automaticJobRegistrar;
     }
 
@@ -127,7 +131,9 @@ public class AsyncBatchDaemonConfig {
     public ApplicationContextFactory[] applicationContextFactories(
             final ApplicationContext ctx) throws IOException {
         return new ApplicationContextFactoryHelper(ctx).load(
-                "classpath:com/example/batch/my_batch_job/jobs/**/*.class");
+                //"classpath:com/example/batch/my_batch_job/jobs/**/*.class"
+        		"classpath:com/example/batch/my_batch_job/config/dbaccess/JobPointAddChunkConfig.class"
+        		);
     }
 
     @Bean

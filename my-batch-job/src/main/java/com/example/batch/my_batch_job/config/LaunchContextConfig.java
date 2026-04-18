@@ -12,7 +12,6 @@ import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.converter.JobParametersConverter;
 import org.springframework.batch.core.launch.support.ExitCodeMapper;
 import org.springframework.batch.core.launch.support.SimpleJvmExitCodeMapper;
@@ -91,6 +90,8 @@ public class LaunchContextConfig {
         exitCodeMapper.put("STOPPED", 255);
         exitCodeMapper.put("FAILED", 255);
         exitCodeMapper.put("UNKNOWN", 255);
+        // Customed ExitStatus
+        exitCodeMapper.put("SKIPPED", 200);
         // Customed ExitStatus for tests
         exitCodeMapper.put("COMPLETED_CUSTOM", 200);
         exitCodeMapper.put("STOPPED_CUSTOM", 201);
@@ -188,5 +189,20 @@ public class LaunchContextConfig {
     @Bean
     public PlatformTransactionManager jobResourcelessTransactionManager() {
         return new ResourcelessTransactionManager();
+    }
+    
+    // database initialize definition
+    @Bean
+    public DataSourceInitializer jobDataSourceInitializer(@Qualifier("jobDataSource") DataSource jobDataSource,
+                                                       @Value("${data-source.initialize.enabled:true}") boolean enabled,
+                                                       @Value("${tutorial.create-table.script}") Resource script,
+                                                       @Value("${tutorial.insert-data.script}") Resource commitScript) {
+        final DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(jobDataSource);
+        dataSourceInitializer.setEnabled(true);
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(script, commitScript);
+        resourceDatabasePopulator.setContinueOnError(true);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+        return dataSourceInitializer;
     }
 }

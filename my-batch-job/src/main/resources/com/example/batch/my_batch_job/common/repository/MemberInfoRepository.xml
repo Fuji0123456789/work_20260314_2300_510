@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- (1) -->
+<mapper namespace="com.example.batch.my_batch_job.common.repository.MemberInfoRepository">
+
+    <!-- (2) -->
+    <select id="cursor" resultType="com.example.batch.my_batch_job.common.dto.MemberInfoDto">
+        SELECT
+            id,
+            type,
+            status,
+            point
+        FROM
+            member_info
+        ORDER BY
+            id ASC
+    </select>
+
+    <!-- (3) -->
+    <update id="updatePointAndStatus" parameterType="com.example.batch.my_batch_job.common.dto.MemberInfoDto">
+        UPDATE
+            member_info
+        SET
+            status = #{status},
+            point = #{point}
+        WHERE
+            id = #{id}
+    </update>
+
+	<select id="findByStatus" parameterType="string" resultType="com.example.batch.my_batch_job.common.dto.MemberInfoDto">
+	    SELECT
+	        id, type, status, point
+	    FROM
+	        member_info
+	    WHERE
+	        status = #{status}
+	</select>
+
+	<select id="count" resultType="long">
+	    SELECT COUNT(*) FROM member_info
+	</select>
+</mapper>
