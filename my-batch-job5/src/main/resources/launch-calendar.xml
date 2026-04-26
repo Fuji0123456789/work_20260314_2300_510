@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://springframework.org"
+       xmlns:xsi="http://w3.org"
+       xmlns:context="http://springframework.org"
+       xsi:schemaLocation="http://springframework.org 
+           http://springframework.org/spring-beans.xsd
+           http://springframework.org 
+           http://springframework.org/spring-context.xsd">
+
+    <!-- アノテーション（@Configurationなど）を有効にする設定 -->
+    <context:annotation-config/>
+    
+    <!-- 先ほど作成したJava構成クラスをBeanとして登録 -->
+    <bean class="com.example.batch.my_batch_job.config.date.CalendarJobConfig"/>
+
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.batch.my_batch_job.common.repository.CalendarMapper">
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        /* H2用のUPSERT文法 (MERGE) */
+        MERGE INTO CALENDAR_MASTER (
+            CALENDAR_DATE,
+            HOLIDAY_NAME,
+            DAY_OF_WEEK,
+            WEEK_NUMBER,
+            IS_BUSINESS_DAY
+        ) KEY (CALENDAR_DATE) /* 重複チェックの主キーを指定 */
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.calendarDate},
+                #{item.holidayName},
+                #{item.dayOfWeek},
+                #{item.weekNumber},
+                #{item.isBusinessDay}
+            )
+        </foreach>
+    </insert>
+
+	<select id="findPreviousBusinessDay" resultType="string">
+	    SELECT CALENDAR_DATE
+	    FROM CALENDAR_MASTER
+	    WHERE CALENDAR_DATE &lt; #{targetDate}
+	      AND IS_BUSINESS_DAY = 1
+	    ORDER BY CALENDAR_DATE DESC
+	    LIMIT 1
+	</select>
+</mapper>
